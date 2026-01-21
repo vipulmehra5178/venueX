@@ -1,65 +1,131 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { loginUser } from "@/services/authService";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const params = useSearchParams();
+  const oauthError = params.get("error");
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleLogin = async () => {
+    setError("");
+    setLoading(true);
+
     try {
-      setLoading(true);
-      const res = await loginUser({ email, password });
+      const res = await loginUser(form);
 
-      const token = res.data.token;
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", res.data.token);
 
-      alert("Login successful");
+      const me = await api.get("/auth/me");
+
+      localStorage.setItem("user", JSON.stringify(me.data.user));
+
+      window.dispatchEvent(new Event("auth-change"));
+
+      router.push("/");
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">
-            Login to VenueX
-          </CardTitle>
-        </CardHeader>
+    <main className="min-h-screen grid md:grid-cols-2">
+      <div
+        className="hidden md:flex flex-col justify-center px-16
+        bg-gradient-to-br from-[#020617] via-[#022c22] to-[#020617] text-white"
+      >
+        <h1 className="text-5xl font-extrabold">
+          Welcome back to <span className="text-amber-400">VenueX</span>
+        </h1>
+        <p className="mt-6 text-lg text-slate-300">
+          Log in to explore events your city loves.
+        </p>
+      </div>
 
-        <CardContent className="space-y-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+      <div className="flex items-center justify-center px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md"
+        >
+          <h2 className="text-3xl font-bold mb-6">Login to your account</h2>
+          {oauthError === "google_account_not_found" && (
+            <p className="mb-4 text-sm text-red-500">
+              This Google account is not registered. Please sign up first.
+            </p>
+          )}
 
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+
+          <div className="space-y-4">
+            <Input
+              name="email"
+              type="email"
+              placeholder="Email"
+              onChange={handleChange}
+            />
+            <Input
+              name="password"
+              type="password"
+              placeholder="Password"
+              onChange={handleChange}
+            />
+
+            <Button
+              className="w-full bg-amber-400 text-black hover:bg-amber-500"
+              onClick={handleLogin}
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </div>
+
+          <div className="my-6 flex items-center gap-3">
+            <div className="h-px flex-1 bg-slate-300/30" />
+            <span className="text-sm text-slate-400">OR</span>
+            <div className="h-px flex-1 bg-slate-300/30" />
+          </div>
 
           <Button
-            className="w-full"
-            onClick={handleLogin}
-            disabled={loading}
+            variant="outline"
+            className="w-full flex items-center gap-3"
+            onClick={() =>
+              (window.location.href =
+                "http://localhost:5000/api/v1/auth/google/login")
+            }
           >
-            {loading ? "Logging in..." : "Login"}
+            <img src="/google.png" className="h-5" />
+            Continue with Google
           </Button>
-        </CardContent>
-      </Card>
-    </div>
+
+          <p className="mt-6 text-sm text-slate-500 text-center">
+            Don’t have an account?{" "}
+            <a href="/register" className="underline">
+              Sign up
+            </a>
+          </p>
+        </motion.div>
+      </div>
+    </main>
   );
 }

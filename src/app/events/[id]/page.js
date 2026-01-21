@@ -8,7 +8,7 @@ import { createBooking } from "@/services/bookingService";
 import { useRouter } from "next/navigation";
 
 export default function EventDetailsPage() {
-  const params = useParams(); // ✅ correct way
+  const params = useParams(); 
   const eventId = params.id;
 
   const [event, setEvent] = useState(null);
@@ -37,7 +37,6 @@ export default function EventDetailsPage() {
 
     router.push(`/payment/${res.data.booking._id}`);
   } catch (err) {
-    console.error("BOOKING ERROR ❌", err.response?.data || err);
     alert(err.response?.data?.message || "Booking failed");
   } finally {
     setBookingLoading(false);
@@ -51,7 +50,6 @@ export default function EventDetailsPage() {
       try {
         const res = await getEventById(eventId);
 
-        console.log("EVENT DETAILS RAW 👉", res.data);
 
         let eventData = null;
 
@@ -65,7 +63,6 @@ export default function EventDetailsPage() {
 
         setEvent(eventData);
       } catch (err) {
-        console.error("EVENT DETAILS ERROR ❌", err);
         setEvent(null);
       } finally {
         setLoading(false);

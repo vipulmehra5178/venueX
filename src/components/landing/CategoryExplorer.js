@@ -13,16 +13,16 @@ export default function CategoryExplorer() {
 
   return (
     <section
-      className="relative py-48 overflow-hidden
+      className="relative min-h-screen overflow-hidden
       bg-gradient-to-b from-[#1A0F2E] via-[#12081F] to-[#0A0612]"
     >
       <div
         className="absolute top-1/3 left-1/2 -translate-x-1/2
-        h-[480px] w-[480px] rounded-full
+        h-[320px] w-[320px] rounded-full
         bg-purple-500/20 blur-[180px]"
       />
 
-      <div className="relative max-w-7xl mx-auto px-6 text-center text-white">
+      <div className="relative max-w-7xl mx-auto px-6 text-center text-white pt-12 pb-12">
         <motion.h2
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -42,7 +42,7 @@ export default function CategoryExplorer() {
           VenueX has experiences curated just for you.
         </motion.p>
 
-        <div className="mt-28 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.name}
