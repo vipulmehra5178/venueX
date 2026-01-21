@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,7 @@ export default function LoginPage() {
     <main className="min-h-screen grid md:grid-cols-2">
       <div
         className="hidden md:flex flex-col justify-center px-16
-        bg-gradient-to-br from-[#020617] via-[#022c22] to-[#020617] text-white"
+        bg-linear-to-br from-[#020617] via-[#022c22] to-[#020617] text-white"
       >
         <h1 className="text-5xl font-extrabold">
           Welcome back to <span className="text-amber-400">VenueX</span>
@@ -111,10 +111,10 @@ export default function LoginPage() {
             className="w-full flex items-center gap-3"
             onClick={() =>
               (window.location.href =
-                "http://localhost:5000/api/v1/auth/google/login")
+                process.env.NEXT_PUBLIC_API_BASE_URL/auth/google/login)
             }
           >
-            <img src="/google.png" className="h-5" />
+            <img src="/google.png" alt="google" className="h-5" />
             Continue with Google
           </Button>
 

@@ -55,7 +55,7 @@ export default function RegisterPage() {
     <main className="min-h-screen grid md:grid-cols-2">
       <div
         className="hidden md:flex flex-col justify-center px-16
-        bg-gradient-to-br from-[#020617] via-[#022c22] to-[#020617] text-white"
+        bg-linear-to-br from-[#020617] via-[#022c22] to-[#020617] text-white"
       >
         <h1 className="text-5xl font-extrabold">
           Join <span className="text-amber-400">VenueX</span>
@@ -133,7 +133,7 @@ export default function RegisterPage() {
                 "http://localhost:5000/api/v1/auth/google/register")
             }
           >
-            <img src="/google.png" className="h-5" />
+            <img src="/google.png" alt= "google" className="h-5" />
             Continue with Google
           </Button>
 
