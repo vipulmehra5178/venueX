@@ -22,7 +22,7 @@ export default function CategoryExplorer() {
         bg-purple-500/20 blur-[180px]"
       />
 
-      <div className="relative max-w-7xl mx-auto px-6 text-center text-white pt-12 pb-12">
+      <div className="relative max-w-7xl mx-auto px-6 text-center text-white pt-12 pb-6">
         <motion.h2
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}

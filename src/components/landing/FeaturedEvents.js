@@ -27,7 +27,7 @@ const events = [
 
 export default function FeaturedEvents() {
   return (
-    <section className="relative py-10 overflow-hidden bg-gradient-to-b from-[#09030F] via-[#12081F] to-[#000000]">
+    <section className="relative py-2 overflow-hidden bg-gradient-to-b from-[#09030F] via-[#12081F] to-[#000000]">
       <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-pink-500/20 blur-[180px]" />
 
       <div className="relative max-w-7xl mx-auto px-6 text-white pt-12 pb-12">

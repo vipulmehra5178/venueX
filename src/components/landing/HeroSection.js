@@ -9,7 +9,7 @@ export default function HeroSection() {
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[420px] w-[420px] rounded-full bg-teal-400/25 blur-[160px]" />
       <div className="absolute bottom-[-20%] right-[-10%] h-[520px] w-[520px] rounded-full bg-amber-400/20 blur-[180px]" />
 
-      <section className="relative mx-auto max-w-7xl px-6 pt-38 pb-12 text-center">
+      <section className="relative mx-auto max-w-7xl px-6 pt-38 pb-4 text-center">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
