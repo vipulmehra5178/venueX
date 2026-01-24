@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getEventById } from "@/services/eventService";
 import { Button } from "@/components/ui/button";
-import { createBooking } from "@/services/bookingService";
 import { useRouter } from "next/navigation";
 
 export default function EventDetailsPage() {
@@ -17,31 +16,7 @@ export default function EventDetailsPage() {
   const router = useRouter();
   const [bookingLoading, setBookingLoading] = useState(false);
   
-  const handleBooking = async () => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    router.push("/login");
-    return;
-  }
-
-  try {
-    setBookingLoading(true);
-
-    const res = await createBooking({
-      eventId: event._id,
-      ticketCount: 1, 
-    });
-
-    alert("Booking created. Proceed to payment.");
-
-    router.push(`/payment/${res.data.booking._id}`);
-  } catch (err) {
-    alert(err.response?.data?.message || "Booking failed");
-  } finally {
-    setBookingLoading(false);
-  }
-};
+  
 
   useEffect(() => {
     if (!eventId) return;
