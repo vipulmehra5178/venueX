@@ -1,6 +1,6 @@
 
 "use client";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +21,13 @@ export default function LoginPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+const [mounted, setMounted] = useState(false);
 
+useEffect(() => {
+  setMounted(true);
+}, []);
+
+if (!mounted) return null;
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
