@@ -13,15 +13,20 @@ export default function HomePage() {
     <>
       <ClientOnly>
         <Navbar />
-      </ClientOnly>
-
+        
+      
       <HeroSection />
       <FeaturedEvents />
       <SocialProof />
-      <CategoryExplorer />
+      
+      
+        <CategoryExplorer />
+      
       <WhyVenueX />
       <CTASection />
       <Footer />
+            </ClientOnly>
+
     </>
   );
 }

@@ -14,11 +14,11 @@ export default function CategoryExplorer() {
   return (
     <section
       className="relative min-h-screen overflow-hidden
-      bg-gradient-to-b from-[#1A0F2E] via-[#12081F] to-[#0A0612]"
+      bg-linear-to-b from-[#1A0F2E] via-[#12081F] to-[#0A0612]"
     >
       <div
         className="absolute top-1/3 left-1/2 -translate-x-1/2
-        h-[320px] w-[320px] rounded-full
+        h-80 w-[320px] rounded-full
         bg-purple-500/20 blur-[180px]"
       />
 
@@ -56,7 +56,7 @@ export default function CategoryExplorer() {
               border border-white/10
               p-10 cursor-pointer
               transition-all duration-300
-              hover:bg-gradient-to-br
+              hover:bg-linear-to-br
               hover:from-purple-600/30 hover:to-pink-500/20"
             >
               <div className="text-5xl mb-6">{cat.emoji}</div>

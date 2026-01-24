@@ -1,12 +1,13 @@
+
 "use client";
-import axios from "axios";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
-import { loginUser } from "@/services/authService";
+import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { loginUser } from "@/services/authService";
+import api from "@/lib/axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -109,10 +110,10 @@ export default function LoginPage() {
           <Button
             variant="outline"
             className="w-full flex items-center gap-3"
-            onClick={() =>
-              (window.location.href =
-                process.env.NEXT_PUBLIC_API_BASE_URL/auth/google/login)
-            }
+            onClick={() => {
+              const googleLoginUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google/login`; 
+              window.location.href = googleLoginUrl;
+            }}
           >
             <img src="/google.png" alt="google" className="h-5" />
             Continue with Google

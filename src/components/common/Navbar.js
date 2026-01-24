@@ -46,12 +46,8 @@ export default function Navbar() {
             Explore
           </Link>
 
-          {(user?.roles?.includes("organizer") ||
-            user?.roles?.includes("admin")) && (
-            <Link
-              href="/organizer/dashboard"
-              className="hover:text-pink-400"
-            >
+          {user?.roles && (user.roles.includes("organizer") || user.roles.includes("admin")) && (
+            <Link href="/organizer/dashboard" className="hover:text-pink-400">
               Host
             </Link>
           )}
@@ -81,7 +77,7 @@ export default function Navbar() {
                 className="absolute right-0 mt-3 w-48
                 rounded-xl bg-black/90 border border-white/10"
               >
-                {user.roles.includes("attendee") && (
+                {user.roles && user.roles.includes("attendee") && (
                   <Link
                     href="/organizer/request"
                     className="block px-4 py-3 hover:bg-white/10"
@@ -90,7 +86,7 @@ export default function Navbar() {
                   </Link>
                 )}
 
-                {user.roles.includes("admin") && (
+                {user.roles && user.roles.includes("admin") && (
                   <Link
                     href="/admin"
                     className="block px-4 py-3 hover:bg-white/10"

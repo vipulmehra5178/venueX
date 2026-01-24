@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect for client-side behavior
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { registerUser } from "@/services/authService";
 import { useSearchParams } from "next/navigation";
+import api from "@/lib/axios";
 
 export default function RegisterPage() {
   const router = useRouter();
-
   const params = useSearchParams();
   const oauthError = params.get("error");
 
@@ -20,36 +20,52 @@ export default function RegisterPage() {
     password: "",
     city: "",
     phone: "",
+    authProvider: "local", 
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []); 
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleRegister = async () => {
-    setError("");
-    setLoading(true);
-
+    setError(""); 
+    setLoading(true); 
     try {
       const res = await registerUser(form);
 
       localStorage.setItem("token", res.data.token);
-
       const me = await api.get("/auth/me");
 
       localStorage.setItem("user", JSON.stringify(me.data.user));
 
       window.dispatchEvent(new Event("auth-change"));
+
       router.push("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      console.error("Registration error:", err);
+
+      if (err.response && err.response.data) {
+        setError(err.response.data.message || "Registration failed");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
+
+  if (!isClient) {
+    return null; 
+  }
 
   return (
     <main className="min-h-screen grid md:grid-cols-2">
@@ -130,10 +146,10 @@ export default function RegisterPage() {
             className="w-full flex items-center gap-3"
             onClick={() =>
               (window.location.href =
-                "http://localhost:5000/api/v1/auth/google/register")
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google/register`)
             }
           >
-            <img src="/google.png" alt= "google" className="h-5" />
+            <img src="/google.png" alt="google" className="h-5" />
             Continue with Google
           </Button>
 
