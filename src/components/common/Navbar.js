@@ -77,14 +77,15 @@ export default function Navbar() {
                 className="absolute right-0 mt-3 w-48
                 rounded-xl bg-black/90 border border-white/10"
               >
-                {user.roles && user.roles.includes("attendee") && (
-                  <Link
-                    href="/organizer/request"
-                    className="block px-4 py-3 hover:bg-white/10"
-                  >
-                    Become Organizer
-                  </Link>
-                )}
+                {user.roles && user.roles.includes("attendee") && !user.roles.includes("organizer") && (
+  <Link
+    href="/organizer/request"
+    className="block px-4 py-3 hover:bg-white/10"
+  >
+    Become Organizer
+  </Link>
+)}
+
 
                 {user.roles && user.roles.includes("admin") && (
                   <Link
