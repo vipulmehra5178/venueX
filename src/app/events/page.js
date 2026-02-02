@@ -2,76 +2,126 @@
 
 import { useEffect, useState } from "react";
 import { getAllEvents } from "@/services/eventService";
-import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import { motion } from "framer-motion";
+
+const categories = [
+  "All",
+  "Music",
+  "Tech",
+  "Sports",
+  "Comedy",
+  "Workshop",
+  "Networking",
+];
 
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await getAllEvents();
-
-
-        let eventsArray = [];
-
-        if (Array.isArray(res.data)) {
-          eventsArray = res.data;
-        } else if (Array.isArray(res.data.events)) {
-          eventsArray = res.data.events;
-        } else if (Array.isArray(res.data.data)) {
-          eventsArray = res.data.data;
-        }
-
-        setEvents(eventsArray);
-      } catch (err) {
-        setEvents([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
+    getAllEvents().then((res) => {
+      setEvents(res.data || []);
+    });
   }, []);
 
-  if (loading) {
-    return <p className="p-6 text-center">Loading events...</p>;
-  }
+  const filtered =
+    activeCategory === "All"
+      ? events
+      : events.filter((e) => e.category === activeCategory);
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Upcoming Events</h1>
+    <main className="min-h-screen px-6 py-28 
+      bg-gradient-to-b from-[#05050a] via-[#0b0b18] to-[#05050a] 
+      text-white"
+    >
+      <div className="max-w-7xl mx-auto">
 
-      {events.length === 0 ? (
-        <p className="text-center text-muted-foreground">
-          No events available
-        </p>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {events.map((event) => (
+        {/* HEADER */}
+        <div className="mb-14">
+          <h1 className="text-5xl font-extrabold tracking-tight">
+            Upcoming <span className="text-pink-400">Events</span>
+          </h1>
+          <p className="mt-4 text-slate-400 max-w-xl">
+            Discover concerts, meetups, workshops and experiences happening near you.
+          </p>
+        </div>
+
+        {/* CATEGORY CHIPS */}
+        <div className="flex flex-wrap gap-4 mb-16">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all
+                ${
+                  activeCategory === cat
+                    ? "bg-pink-500 text-black shadow-lg shadow-pink-500/30"
+                    : "bg-white/10 text-slate-300 hover:bg-white/20"
+                }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* EVENTS GRID */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {filtered.map((event) => (
             <Link key={event._id} href={`/events/${event._id}`}>
-              <Card className="cursor-pointer transition hover:shadow-lg">
-                <CardContent className="space-y-2 p-4">
-                  <h2 className="text-xl font-semibold">
+              <motion.div
+                whileHover={{ y: -10 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className="group rounded-3xl overflow-hidden
+                bg-gradient-to-br from-[#141428] to-[#0b0b18]
+                border border-white/10
+                shadow-xl shadow-black/40"
+              >
+                {/* IMAGE */}
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={event.imageUrl || "/event-placeholder.jpg"}
+                    alt={event.title}
+                    className="w-full h-full object-cover 
+                    group-hover:scale-105 transition duration-700"
+                  />
+
+                  {/* CATEGORY BADGE */}
+                  <span className="absolute top-4 left-4 
+                    bg-black/70 backdrop-blur-md
+                    px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-400">
+                    {event.category}
+                  </span>
+                </div>
+
+                {/* CONTENT */}
+                <div className="p-6 space-y-3">
+                  <h2 className="text-2xl font-semibold leading-tight">
                     {event.title}
                   </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {event.description?.slice(0, 80) || "No description"}
+
+                  <p className="text-slate-400 text-sm">
+                    {event.subtitle ||
+                      event.description?.slice(0, 90) ||
+                      "An unforgettable experience awaits you."}
                   </p>
-                  <p className="text-sm">
-                    📅 {new Date(event.date).toDateString()}
-                  </p>
-                  <p className="text-sm">
-                    🎫 Tickets Left: {event.availableTickets}
-                  </p>
-                </CardContent>
-              </Card>
+
+                  {/* FOOTER */}
+                  <div className="flex justify-between items-center pt-4 text-sm">
+                    <span className="text-slate-300">
+                      📅 {new Date(event.dateTime).toDateString()}
+                    </span>
+
+                    <span className="text-lg font-bold text-amber-400">
+                      ₹{event.ticketPrice}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
             </Link>
           ))}
         </div>
-      )}
-    </div>
+      </div>
+    </main>
   );
 }
