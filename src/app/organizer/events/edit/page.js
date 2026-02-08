@@ -66,7 +66,6 @@ export default function CreateEventPage() {
 
         <form onSubmit={handleSubmit} className="space-y-8">
 
-          {/* BASIC INFO */}
           <section>
             <h2 className="text-xl mb-4">Basic Info</h2>
             <div className="grid gap-4">
@@ -100,7 +99,6 @@ export default function CreateEventPage() {
             </div>
           </section>
 
-          {/* DATE & TIME */}
           <section>
             <h2 className="text-xl mb-4">Date & Time</h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -120,7 +118,6 @@ export default function CreateEventPage() {
             </div>
           </section>
 
-          {/* LOCATION */}
           <section>
             <h2 className="text-xl mb-4">Location</h2>
 
@@ -148,7 +145,6 @@ export default function CreateEventPage() {
             )}
           </section>
 
-          {/* TICKETING */}
           <section>
             <h2 className="text-xl mb-4">Ticketing</h2>
             <label className="flex items-center gap-2 mb-4">
@@ -184,7 +180,6 @@ export default function CreateEventPage() {
             </div>
           </section>
 
-          {/* MEDIA */}
           <section>
             <h2 className="text-xl mb-4">Media</h2>
             <input
@@ -195,7 +190,6 @@ export default function CreateEventPage() {
             />
           </section>
 
-          {/* PUBLISH */}
           <button
             type="submit"
             disabled={loading}

@@ -1,5 +1,4 @@
 import ClientOnly from "@/components/common/ClientOnly";
-import Navbar from "@/components/common/Navbar";
 import HeroSection from "@/components/landing/HeroSection";
 import SocialProof from "@/components/landing/SocialProof";
 import CategoryExplorer from "@/components/landing/CategoryExplorer";
@@ -10,23 +9,16 @@ import Footer from "@/components/landing/Footer";
 
 export default function HomePage() {
   return (
-    <>
-      <ClientOnly>
-        <Navbar />
-        
-      
-      <HeroSection />
-      <FeaturedEvents />
-      <SocialProof />
-      
-      
+    <ClientOnly>
+      <div className="flex flex-col gap-1">
+        <HeroSection />
+        <FeaturedEvents />
+        <SocialProof />
         <CategoryExplorer />
-      
-      <WhyVenueX />
-      <CTASection />
-      <Footer />
-            </ClientOnly>
-
-    </>
+        <WhyVenueX />
+        <CTASection />
+        <Footer />
+      </div>
+    </ClientOnly>
   );
 }

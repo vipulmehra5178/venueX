@@ -4,10 +4,9 @@ import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b 
-      from-[#04040a] via-[#0b0b18] to-[#04040a] text-white">
+        <div className="min-h-screen pt-30 bg-gradient-to-br from-[#0b0b0f] via-[#0e1018] to-[#0a0a12] text-white px-8 py-14">
 
-      {/* HERO */}
+
       <section className="relative px-6 pt-40 pb-32 text-center">
         <div className="absolute inset-0 bg-pink-500/10 blur-[140px]" />
 
@@ -27,7 +26,6 @@ export default function AboutPage() {
         </p>
       </section>
 
-      {/* STORY */}
       <section className="px-6 py-32 max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
         <motion.div
           initial={{ opacity: 0, x: -40 }}
@@ -49,7 +47,6 @@ export default function AboutPage() {
           </p>
         </motion.div>
 
-        {/* VISUAL CARD */}
         <motion.div
           whileHover={{ scale: 1.03 }}
           className="rounded-3xl p-10
@@ -67,7 +64,6 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* VALUES */}
       <section className="px-6 py-32 bg-gradient-to-r from-[#0a0a16] to-[#05050a]">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-16">
@@ -107,7 +103,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CLOSING */}
       <section className="px-6 py-36 text-center">
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
@@ -127,6 +122,6 @@ export default function AboutPage() {
           See you at the next event ✨
         </p>
       </section>
-    </main>
+    </div>
   );
 }

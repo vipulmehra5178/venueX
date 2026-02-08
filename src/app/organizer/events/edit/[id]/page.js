@@ -12,6 +12,8 @@ export default function EditEventPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
+
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -54,10 +56,10 @@ export default function EditEventPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0b0b0f] via-[#0f1220] to-[#0a0a12] text-white px-6 py-10">
+    <div className="min-h-screen pt-30 bg-gradient-to-br from-[#0b0b0f] via-[#0e1018] to-[#0a0a12] text-white px-8 py-14">
+
       <div className="max-w-5xl mx-auto space-y-10">
 
-        {/* Header */}
         <div>
           <h1 className="text-3xl font-bold">Edit Event</h1>
           <p className="text-white/60 mt-1">
@@ -67,7 +69,6 @@ export default function EditEventPage() {
 
         <form onSubmit={handleUpdate} className="space-y-8">
 
-          {/* BASIC INFO */}
           <Section title="Basic Info" gradient="from-indigo-500/20 to-purple-500/20">
             <input name="title" value={form.title} onChange={handleChange} className="input" />
             <input name="subtitle" value={form.subtitle || ""} onChange={handleChange} className="input" />
@@ -80,7 +81,6 @@ export default function EditEventPage() {
             />
           </Section>
 
-          {/* DATE & TIME */}
           <Section title="Date & Time" gradient="from-cyan-500/20 to-blue-500/20">
             <div className="grid md:grid-cols-2 gap-4">
               <input
@@ -100,7 +100,6 @@ export default function EditEventPage() {
             </div>
           </Section>
 
-          {/* LOCATION */}
           <Section title="Location" gradient="from-emerald-500/20 to-teal-500/20">
             <select name="mode" value={form.mode} onChange={handleChange} className="input mb-4">
               <option value="offline">Offline</option>
@@ -126,7 +125,6 @@ export default function EditEventPage() {
             )}
           </Section>
 
-          {/* TICKETS */}
           <Section title="Ticketing" gradient="from-amber-500/20 to-orange-500/20">
             <label className="flex items-center gap-3">
               <input type="checkbox" name="isPaid" checked={form.isPaid} onChange={handleChange} />
@@ -161,7 +159,6 @@ export default function EditEventPage() {
             </div>
           </Section>
 
-          {/* ACTIONS */}
           <div className="flex gap-4 pt-6">
             <button
               type="submit"
@@ -189,7 +186,6 @@ export default function EditEventPage() {
   );
 }
 
-/* ---------- Section Component ---------- */
 
 function Section({ title, gradient, children }) {
   return (
