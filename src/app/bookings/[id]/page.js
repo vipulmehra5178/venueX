@@ -17,7 +17,7 @@ export default function BookingDetailsPage() {
     const fetchBooking = async () => {
       try {
         const res = await api.get("/bookings/me");
-        const found = res.data.find(b => b._id === id);
+        const found = res.data.find((b) => b._id === id);
 
         if (!found) {
           router.push("/bookings");
@@ -38,31 +38,30 @@ export default function BookingDetailsPage() {
     fetchBooking();
   }, [id, router]);
   const downloadInvoice = async () => {
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookings/${booking._id}/invoice`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/bookings/${booking._id}/invoice`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to download invoice");
       }
-    );
 
-    if (!res.ok) {
-      throw new Error("Failed to download invoice");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      window.open(url, "_blank");
+    } catch (err) {
+      alert("Unable to download invoice");
     }
-
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    window.open(url, "_blank");
-  } catch (err) {
-    alert("Unable to download invoice");
-  }
-};
-
+  };
 
   if (loading) {
     return (
@@ -74,23 +73,20 @@ export default function BookingDetailsPage() {
 
   const e = booking.eventId;
   const expired =
-    booking.status === "pending" &&
-    new Date(booking.expiresAt) < new Date();
+    booking.status === "pending" && new Date(booking.expiresAt) < new Date();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#04040a] via-[#0b0e1f] to-[#05050a] text-white px-6 py-28">
       <div className="max-w-5xl mx-auto space-y-14">
-
         <h1 className="text-4xl font-extrabold">Booking Details</h1>
 
         <div className="rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl overflow-hidden">
           <div
-            className="h-72 bg-cover bg-center"
+            className="h-125 bg-cover bg-center"
             style={{ backgroundImage: `url(${e.coverImage})` }}
           />
 
           <div className="p-8 space-y-10">
-
             <div>
               <h2 className="text-3xl font-bold">{e.title}</h2>
               <p className="text-slate-400">{e.subtitle}</p>
@@ -105,7 +101,7 @@ export default function BookingDetailsPage() {
               <div>🕒 {e.timezone}</div>
               <div>🎫 Qty: {booking.quantity}</div>
               <div className="text-amber-400 font-bold">
-               Amount Paid:-  ₹{booking.totalAmount}
+                Amount Paid:- ₹{booking.totalAmount}
               </div>
               <div>Status: {booking.status}</div>
               <div className="font-mono text-400">
@@ -123,27 +119,25 @@ export default function BookingDetailsPage() {
               </div>
             )}
 
-            {booking.status === "confirmed" && e.mode !== "offline" && e.onlineLink && (
-              <div className="text-center pt-6">
-                <a
-                  href={e.onlineLink}
-                  target="_blank"
-                  className="inline-block px-10 py-4 rounded-xl font-semibold
+            {booking.status === "confirmed" &&
+              e.mode !== "offline" &&
+              e.onlineLink && (
+                <div className="text-center pt-6">
+                  <a
+                    href={e.onlineLink}
+                    target="_blank"
+                    className="inline-block px-10 py-4 rounded-xl font-semibold
                     bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-                >
-                  🔗 Link for the Event
-                </a>
-              </div>
-            )}
+                  >
+                    🔗 Link for the Event
+                  </a>
+                </div>
+              )}
             <button
-  onClick={downloadInvoice}
-  className="flex-1 py-3 rounded-xl font-semibold
-    bg-gradient-to-r from-emerald-500 to-green-600"
->
-  📄 Download Invoice
-</button>
-
-
+              onClick={downloadInvoice}
+              className="flex-1 py-3 rounded-xl font-semibold bg-gradient-to-r from-emerald-500 to-green-600">
+              📄 Download Invoice
+            </button>
 
             <div className="flex gap-4 pt-6">
               {booking.status === "pending" && !expired && (

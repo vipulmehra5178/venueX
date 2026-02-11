@@ -21,17 +21,16 @@ export default function EventsPage() {
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
   const [sort, setSort] = useState("date");
-  
 
   useEffect(() => {
     const fetchEvents = async () => {
       const res = await getAllEvents({
         search,
-        category: activeCategory,
+        category: activeCategory === "All" ? "" : activeCategory,
         city,
         sort,
       });
-      setEvents(res.data || []);
+      setEvents(res?.data || []);
     };
 
     fetchEvents();
@@ -44,7 +43,6 @@ export default function EventsPage() {
       text-white"
     >
       <div className="max-w-7xl mx-auto">
-
         <div className="mb-14">
           <h1 className="text-5xl font-extrabold tracking-tight">
             Discover <span className="text-pink-400">Events</span>
@@ -101,7 +99,7 @@ export default function EventsPage() {
           ))}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 auto-rows-fr">
           {events.map((event) => {
             const soldOut = event.availableTickets === 0;
 
@@ -110,12 +108,13 @@ export default function EventsPage() {
                 <motion.div
                   whileHover={{ y: -10 }}
                   transition={{ type: "spring", stiffness: 200 }}
-                  className="group rounded-3xl overflow-hidden
+                  className="group h-full flex flex-col
+                  rounded-3xl overflow-hidden
                   bg-gradient-to-br from-[#141428] to-[#0b0b18]
                   border border-white/10
                   shadow-xl shadow-black/40"
                 >
-                  <div className="relative h-56 overflow-hidden">
+                  <div className="relative h-56 shrink-0 overflow-hidden">
                     <img
                       src={event.coverImage || "/event-placeholder.jpg"}
                       alt={event.title}
@@ -148,8 +147,8 @@ export default function EventsPage() {
                     )}
                   </div>
 
-                  <div className="p-6 space-y-4">
-                    <h2 className="text-2xl font-semibold leading-tight">
+                  <div className="p-6 flex flex-col gap-4 flex-1">
+                    <h2 className="text-xl font-semibold leading-snug line-clamp-2">
                       {event.title}
                     </h2>
 
@@ -158,33 +157,43 @@ export default function EventsPage() {
                     </p>
 
                     {event.tags?.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {event.tags.slice(0, 3).map((tag) => (
+                      <div className="flex gap-2 overflow-hidden">
+                        {event.tags.slice(0, 2).map((tag) => (
                           <span
                             key={tag}
                             className="text-xs px-3 py-1 rounded-full
-                            bg-white/10 text-slate-300"
+                            bg-white/10 text-slate-300 whitespace-nowrap"
                           >
                             #{tag}
                           </span>
                         ))}
+                        {event.tags.length > 2 && (
+                          <span className="text-xs text-slate-400">
+                            +{event.tags.length - 2}
+                          </span>
+                        )}
                       </div>
                     )}
 
-                    <div className="pt-4 border-t border-white/10
+                    <div
+                      className="mt-auto pt-4 border-t border-white/10
                       flex justify-between items-center text-sm"
                     >
                       <div className="text-slate-300 space-y-1">
                         <div>
                           📅{" "}
-                          {new Date(event.startDateTime).toLocaleDateString()}
+                          {new Date(
+                            event.startDateTime
+                          ).toLocaleDateString()}
                         </div>
                         <div>
                           📍{" "}
                           {event.mode === "online"
                             ? "Online"
                             : `${event.city || ""}${
-                                event.venueName ? " · " + event.venueName : ""
+                                event.venueName
+                                  ? " · " + event.venueName
+                                  : ""
                               }`}
                         </div>
                       </div>

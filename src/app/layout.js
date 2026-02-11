@@ -5,7 +5,14 @@ import ClientOnly from "@/components/common/ClientOnly";
 
 export const metadata = {
   title: "VenueX | Discover Amazing Events",
-  description: "Discover, attend, and host experiences your city loves with VenueX.",
+  description:
+    "Discover, attend, and host experiences your city loves with VenueX.",
+ icons: {
+  icon: [
+    { url: "/vx.png", sizes: "32x32", type: "image/png" },
+    { url: "/logo.png", sizes: "16x16", type: "image/png" },
+  ],
+}
 };
 
 const inter = Inter({

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   FaUserAlt,
@@ -16,6 +16,8 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const navRef = useRef(null);
+
   const loadUser = () => {
     const stored = localStorage.getItem("user");
     setUser(stored ? JSON.parse(stored) : null);
@@ -27,6 +29,19 @@ export default function Navbar() {
     return () => window.removeEventListener("auth-change", loadUser);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setOpen(false);
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -34,55 +49,59 @@ export default function Navbar() {
     window.location.href = "/";
   };
 
+  const closeAll = () => {
+    setOpen(false);
+    setMenuOpen(false);
+  };
+
   return (
     <motion.nav
+      ref={navRef}
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-6xl
         rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20"
     >
       <div className="flex items-center justify-between px-6 py-4 text-white">
-
-        <Link href="/" className="text-2xl font-bold tracking-wide">
+        <Link
+          href="/"
+          onClick={closeAll}
+          className="text-2xl font-bold tracking-wide"
+        >
           Venue<span className="text-pink-400">X</span>
         </Link>
 
         <div className="hidden md:flex gap-6 text-lg">
-          <Link href="/events" className="hover:text-pink-400 transition">
+          <Link href="/events" onClick={closeAll} className="hover:text-pink-400">
             Explore
           </Link>
-
-          {user && (
-            <Link href="/bookings" className="hover:text-pink-400 transition">
-              My Bookings
-            </Link>
-          )}
 
           {user?.roles &&
             (user.roles.includes("organizer") ||
               user.roles.includes("admin")) && (
               <Link
                 href="/organizer/dashboard"
-                className="hover:text-pink-400 transition"
+                onClick={closeAll}
+                className="hover:text-pink-400"
               >
                 Host
               </Link>
             )}
 
-          <Link href="/about" className="hover:text-pink-400 transition">
+          <Link href="/about" onClick={closeAll} className="hover:text-pink-400">
             About
           </Link>
         </div>
 
         <button
           className="md:hidden"
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => setMenuOpen((p) => !p)}
         >
           ☰
         </button>
 
         {!user ? (
-          <Link href="/login">
+          <Link href="/login" onClick={closeAll}>
             <Button className="bg-pink-500 hover:bg-pink-600 rounded-full px-6">
               Get Started
             </Button>
@@ -90,7 +109,7 @@ export default function Navbar() {
         ) : (
           <div className="relative">
             <button
-              onClick={() => setOpen(!open)}
+              onClick={() => setOpen((p) => !p)}
               className="flex items-center gap-2 px-6 py-3 rounded-full
                 bg-white/10 hover:bg-white/20"
             >
@@ -100,10 +119,11 @@ export default function Navbar() {
 
             {open && (
               <div className="absolute right-0 mt-3 w-52 rounded-xl
-                bg-black/80 border border-white/20">
-                
+                bg-black/80 border border-white/20"
+              >
                 <Link
                   href="/bookings"
+                  onClick={closeAll}
                   className="block px-4 py-3 hover:bg-white/10"
                 >
                   <FaTicketAlt className="inline mr-2" />
@@ -114,6 +134,7 @@ export default function Navbar() {
                   !user.roles.includes("organizer") && (
                     <Link
                       href="/organizer/request"
+                      onClick={closeAll}
                       className="block px-4 py-3 hover:bg-white/10"
                     >
                       <FaPlusCircle className="inline mr-2" />
@@ -122,12 +143,22 @@ export default function Navbar() {
                   )}
 
                 {user.roles?.includes("admin") && (
-                  <Link
-                    href="/admin"
-                    className="block px-4 py-3 hover:bg-white/10"
-                  >
-                    Admin Panel
-                  </Link>
+                  <>
+                    <Link
+                      href="/admin"
+                      onClick={closeAll}
+                      className="block px-4 py-3 hover:bg-white/10"
+                    >
+                      Admin Panel
+                    </Link>
+                    <Link
+                      href="/admin/dashboard"
+                      onClick={closeAll}
+                      className="block px-4 py-3 hover:bg-white/10"
+                    >
+                      Admin Dashboard
+                    </Link>
+                  </>
                 )}
 
                 <button
@@ -145,10 +176,12 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="md:hidden bg-black/80 p-6 rounded-b-2xl">
-          <Link href="/events" className="block py-2">Explore</Link>
+          <Link href="/events" onClick={closeAll} className="block py-2">
+            Explore
+          </Link>
 
           {user && (
-            <Link href="/bookings" className="block py-2">
+            <Link href="/bookings" onClick={closeAll} className="block py-2">
               My Bookings
             </Link>
           )}
@@ -156,12 +189,18 @@ export default function Navbar() {
           {user?.roles &&
             (user.roles.includes("organizer") ||
               user.roles.includes("admin")) && (
-              <Link href="/organizer/dashboard" className="block py-2">
+              <Link
+                href="/organizer/dashboard"
+                onClick={closeAll}
+                className="block py-2"
+              >
                 Host
               </Link>
             )}
 
-          <Link href="/about" className="block py-2">About</Link>
+          <Link href="/about" onClick={closeAll} className="block py-2">
+            About
+          </Link>
         </div>
       )}
     </motion.nav>

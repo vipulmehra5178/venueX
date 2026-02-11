@@ -27,6 +27,11 @@
     focus:border-indigo-500/60 
     transition duration-200;
 }
+.oi-regular {
+  font-family: "Oi", serif;
+  font-weight: 400;
+  font-style: normal;
+}
 
 
 
