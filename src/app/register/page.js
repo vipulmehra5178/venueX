@@ -1,28 +1,24 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react"; 
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { registerUser } from "@/services/authService";
-import { useSearchParams } from "next/navigation";
 import api from "@/lib/axios";
 
 export default function RegisterPage() {
   const router = useRouter();
-  
+
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-  }, []); 
+  }, []);
 
-  if (!isClient) {
-    return null; 
-  }
+  if (!isClient) return null;
 
-  
   const PageContent = () => {
     const params = useSearchParams();
     const oauthError = params.get("error");
@@ -33,7 +29,7 @@ export default function RegisterPage() {
       password: "",
       city: "",
       phone: "",
-      authProvider: "local", 
+      authProvider: "local",
     });
 
     const [loading, setLoading] = useState(false);
@@ -44,8 +40,9 @@ export default function RegisterPage() {
     };
 
     const handleRegister = async () => {
-      setError(""); 
-      setLoading(true); 
+      setError("");
+      setLoading(true);
+
       try {
         const res = await registerUser(form);
 
@@ -58,15 +55,20 @@ export default function RegisterPage() {
 
         router.push("/");
       } catch (err) {
-        console.error("Registration error:", err);
-
-        if (err.response && err.response.data) {
-          setError(err.response.data.message || "Registration failed");
+        if (err.response?.data?.message) {
+          setError(err.response.data.message);
         } else {
           setError("An unexpected error occurred. Please try again.");
         }
       } finally {
-        setLoading(false); 
+        setLoading(false);
+      }
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!loading) {
+        await handleRegister();
       }
     };
 
@@ -91,6 +93,7 @@ export default function RegisterPage() {
             className="w-full max-w-md"
           >
             <h2 className="text-3xl font-bold mb-6">Create your account</h2>
+
             {oauthError === "google_account_not_found" && (
               <p className="mb-4 text-sm text-red-500">
                 No account found for this Google email. Please create an account
@@ -100,43 +103,21 @@ export default function RegisterPage() {
 
             {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
 
-            <div className="space-y-4">
-              <Input
-                name="name"
-                placeholder="Full Name"
-                onChange={handleChange}
-              />
-              <Input
-                name="email"
-                type="email"
-                placeholder="Email"
-                onChange={handleChange}
-              />
-              <Input
-                name="password"
-                type="password"
-                placeholder="Password"
-                onChange={handleChange}
-              />
-              <Input
-                name="city"
-                placeholder="City (e.g. Mumbai)"
-                onChange={handleChange}
-              />
-              <Input
-                name="phone"
-                placeholder="Phone (optional)"
-                onChange={handleChange}
-              />
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input name="name" placeholder="Full Name" onChange={handleChange} />
+              <Input name="email" type="email" placeholder="Email" onChange={handleChange} />
+              <Input name="password" type="password" placeholder="Password" onChange={handleChange} />
+              <Input name="city" placeholder="City (e.g. Mumbai)" onChange={handleChange} />
+              <Input name="phone" placeholder="Phone (optional)" onChange={handleChange} />
 
               <Button
+                type="submit"
                 className="w-full bg-amber-400 text-black hover:bg-amber-500"
-                onClick={handleRegister}
                 disabled={loading}
               >
                 {loading ? "Creating account..." : "Sign Up"}
               </Button>
-            </div>
+            </form>
 
             <div className="my-6 flex items-center gap-3">
               <div className="h-px flex-1 bg-slate-300/30" />

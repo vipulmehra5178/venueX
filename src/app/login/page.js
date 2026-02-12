@@ -1,22 +1,24 @@
 "use client";
+
 import { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { loginUser } from "@/services/authService";
 import api from "@/lib/axios";
 
 export default function LoginPage() {
   const router = useRouter();
-  
+
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     setMounted(true);
   }, []);
-  
-  if (!mounted) return null; 
+
+  if (!mounted) return null;
+
   const PageContent = () => {
     const params = useSearchParams();
     const oauthError = params.get("error");
@@ -56,6 +58,13 @@ export default function LoginPage() {
       }
     };
 
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!loading) {
+        await handleLogin();
+      }
+    };
+
     return (
       <main className="min-h-screen grid md:grid-cols-2">
         <div
@@ -77,6 +86,7 @@ export default function LoginPage() {
             className="w-full max-w-md"
           >
             <h2 className="text-3xl font-bold mb-6">Login to your account</h2>
+
             {oauthError === "google_account_not_found" && (
               <p className="mb-4 text-sm text-red-500">
                 This Google account is not registered. Please sign up first.
@@ -85,7 +95,7 @@ export default function LoginPage() {
 
             {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
 
-            <div className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <Input
                 name="email"
                 type="email"
@@ -100,13 +110,13 @@ export default function LoginPage() {
               />
 
               <Button
+                type="submit"
                 className="w-full bg-amber-400 text-black hover:bg-amber-500"
-                onClick={handleLogin}
                 disabled={loading}
               >
                 {loading ? "Logging in..." : "Login"}
               </Button>
-            </div>
+            </form>
 
             <div className="my-6 flex items-center gap-3">
               <div className="h-px flex-1 bg-slate-300/30" />
@@ -118,7 +128,7 @@ export default function LoginPage() {
               variant="outline"
               className="w-full flex items-center gap-3"
               onClick={() => {
-                const googleLoginUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google/login`; 
+                const googleLoginUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google/login`;
                 window.location.href = googleLoginUrl;
               }}
             >
