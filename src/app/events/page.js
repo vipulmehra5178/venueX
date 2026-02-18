@@ -37,11 +37,7 @@ export default function EventsPage() {
   }, [search, activeCategory, city, sort]);
 
   return (
-    <main
-      className="min-h-screen px-6 py-28
-      bg-gradient-to-b from-[#05050a] via-[#0b0b18] to-[#05050a]
-      text-white"
-    >
+   <main className="min-h-screen px-6 py-28 bg-linear-to-b from-[#05050a] via-[#0b0b18] to-[#05050a] text-white">
       <div className="max-w-7xl mx-auto">
         <div className="mb-14">
           <h1 className="text-5xl font-extrabold tracking-tight">
@@ -110,7 +106,7 @@ export default function EventsPage() {
                   transition={{ type: "spring", stiffness: 200 }}
                   className="group h-full flex flex-col
                   rounded-3xl overflow-hidden
-                  bg-gradient-to-br from-[#141428] to-[#0b0b18]
+                  bg-linear-to-br from-[#141428] to-[#0b0b18]
                   border border-white/10
                   shadow-xl shadow-black/40"
                 >
